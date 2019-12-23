@@ -5,13 +5,13 @@
     <a href="https://swift.org">
         <img src="http://img.shields.io/badge/Swift-5.1-brightgreen.svg" alt="Language">
     </a>
-    <a href="https://github.com/brokenhandsio/steampress-fluent-postgres/actions">
-        <img src="https://github.com/brokenhandsio/steampress-fluent-postgres/workflows/CI/badge.svg?branch=master" alt="Build Status">
+    <a href="https://github.com/brokenhandsio/steampress-fluent-mysql/actions">
+        <img src="https://github.com/brokenhandsio/steampress-fluent-mysql/workflows/CI/badge.svg?branch=master" alt="Build Status">
     </a>
-    <a href="https://codecov.io/gh/brokenhandsio/steampress-fluent-postgres">
-        <img src="https://codecov.io/gh/brokenhandsio/steampress-fluent-postgres/branch/master/graph/badge.svg" alt="Code Coverage">
+    <a href="https://codecov.io/gh/brokenhandsio/steampress-fluent-mysql">
+        <img src="https://codecov.io/gh/brokenhandsio/steampress-fluent-mysql/branch/master/graph/badge.svg" alt="Code Coverage">
     </a>
-    <a href="https://raw.githubusercontent.com/brokenhandsio/steampress-fluent-postgres/master/LICENSE">
+    <a href="https://raw.githubusercontent.com/brokenhandsio/steampress-fluent-mysql/master/LICENSE">
         <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
     </a>
 </p>
@@ -25,18 +25,18 @@ Add the package to your **Package.swift** dependencies:
 ```swift
 dependencies: [
     ...,
-    .package(url: "https://github.com/brokenhandsio/steampress-fluent-postgres.git", from: "0.1.0"),
+    .package(url: "https://github.com/brokenhandsio/steampress-fluent-mysql.git", from: "0.1.0"),
 ]
 ```
 
-In **configure.swift** add the SteamPress Fluent Postgres provider:
+In **configure.swift** add the SteamPress Fluent MySQL provider:
 
 ```swift
-import SteampressFluentPostgres
+import SteampressFluentMysql
 
 // ...
 
-let provider = SteamPressFluentPostgresProvider()
+let provider = SteamPressFluentMysqlProvider()
 try services.register(provider)
 ```
 
@@ -45,10 +45,10 @@ You also need to add the migrations for the different database models to your `M
 ```swift
 var migrations = MigrationConfig()
 // ...
-migrations.add(model: BlogTag.self, database: .psql)
-migrations.add(model: BlogUser.self, database: .psql)
-migrations.add(model: BlogPost.self, database: .psql)
-migrations.add(model: BlogPostTagPivot.self, database: .psql)
+migrations.add(model: BlogTag.self, database: .mysql)
+migrations.add(model: BlogUser.self, database: .mysql)
+migrations.add(model: BlogPost.self, database: .mysql)
+migrations.add(model: BlogPostTagPivot.self, database: .mysql)
 services.register(migrations)
 ```
 
