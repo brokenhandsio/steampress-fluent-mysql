@@ -7,12 +7,11 @@ jobs:
       image: vapor/swift:5.1-xenial
     services:
       psql:
-        image: mysql
-        ports:
-          - 3306:3306
+        image: mysql:5.7
         env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_USER: steampress
-          MYSQL_DB: steampress-test
+          MYSQL_DATABASE: steampress-test
           MYSQL_PASSWORD: password
     runs-on: ubuntu-latest
     steps:
@@ -27,11 +26,10 @@ jobs:
     services:
       psql:
         image: mysql
-        ports:
-          - 3306:3306
         env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_USER: steampress
-          MYSQL_DB: steampress-test
+          MYSQL_DATABASE: steampress-test
           MYSQL_PASSWORD: password
     runs-on: ubuntu-latest
     steps:
