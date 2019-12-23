@@ -6,7 +6,7 @@ jobs:
     container:
       image: vapor/swift:5.1-xenial
     services:
-      psql:
+      mysql:
         image: mysql:5.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
@@ -24,7 +24,7 @@ jobs:
     container:
       image: vapor/swift:5.1-bionic
     services:
-      psql:
+      mysql:
         image: mysql
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
