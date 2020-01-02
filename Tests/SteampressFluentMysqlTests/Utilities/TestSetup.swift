@@ -3,7 +3,7 @@ import FluentMySQL
 import SteampressFluentMysql
 
 struct TestSetup {
-    static func getApp() throws -> Application {
+    static func getApp(enableAdminUser: Bool = false) throws -> Application {
         var services = Services.default()
         try services.register(FluentMySQLProvider())
         
@@ -34,6 +34,9 @@ struct TestSetup {
         migrations.add(model: BlogUser.self, database: .mysql)
         migrations.add(model: BlogPost.self, database: .mysql)
         migrations.add(model: BlogPostTagPivot.self, database: .mysql)
+        if enableAdminUser {
+            migrations.add(migration: BlogAdminUser.self, database: .mysql)
+        }
         services.register(migrations)
         
         let config = Config.default()
