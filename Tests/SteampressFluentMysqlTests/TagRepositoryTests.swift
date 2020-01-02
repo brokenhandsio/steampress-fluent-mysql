@@ -103,8 +103,8 @@ class TagRepositoryTests: XCTestCase {
         
         let postTags =  try repository.getTags(for: post, on: app).wait()
         XCTAssertEqual(postTags.count, 2)
-        XCTAssertEqual(postTags.first?.name, tag1.name)
-        XCTAssertEqual(postTags.last?.name, tag2.name)
+        XCTAssertTrue(postTags.contains { $0.name == tag1.name})
+        XCTAssertTrue(postTags.contains { $0.name == tag2.name})
     }
     
     func testDeletingTagsForPost() throws {
