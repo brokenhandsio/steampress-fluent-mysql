@@ -120,6 +120,20 @@ class PostRepositoryTests: XCTestCase {
         XCTAssertEqual(allPosts.last?.slugUrl, post2.slugUrl)
     }
     
+    func testGetAllPostsCount() throws {
+        _ = try BlogPost(title: "A new post", contents: "Some Contents", author: postAuthor, creationDate: Date().addingTimeInterval(360), slugUrl: "a-new-post", published: true).save(on: connection).wait()
+        _ = try BlogPost(title: "A different post", contents: "Some other contents", author: postAuthor, creationDate: Date().addingTimeInterval(-360), slugUrl: "a-different-post", published: true).save(on: connection).wait()
+        _ = try BlogPost(title: "A third post", contents: "Some other contents", author: postAuthor, creationDate: Date(), slugUrl: "a-third-post", published: true).save(on: connection).wait()
+        _ = try BlogPost(title: "A draft post", contents: "Some other contents", author: postAuthor, creationDate: Date().addingTimeInterval(60), slugUrl: "a-draft-post", published: false).save(on: connection).wait()
+
+        let publishedPostsCount = try repository.getAllPostsCount(includeDrafts: false, on: app).wait()
+        XCTAssertEqual(publishedPostsCount, 3)
+
+        let allPostsCount = try repository.getAllPostsCount(includeDrafts: true, on: app).wait()
+
+        XCTAssertEqual(allPostsCount, 4)
+    }
+    
     func testSearchReturnsPublishedPostsInDateOrder() throws {
         let post1 = try BlogPost(title: "A new post", contents: "Some Contents about vapor", author: postAuthor, creationDate: Date().addingTimeInterval(-360), slugUrl: "a-new-post", published: true).save(on: connection).wait()
         let post2 = try BlogPost(title: "A different Vapor post", contents: "Some other contents", author: postAuthor, creationDate: Date().addingTimeInterval(360), slugUrl: "a-different-post", published: true).save(on: connection).wait()
@@ -128,11 +142,13 @@ class PostRepositoryTests: XCTestCase {
         _ = try BlogPost(title: "An unrelated draft post", contents: "Some other contents", author: postAuthor, creationDate: Date(), slugUrl: "an-unrelated-draft-post", published: false).save(on: connection).wait()
         _ = try BlogPost(title: "An unrelated post", contents: "Some other contents", author: postAuthor, creationDate: Date(), slugUrl: "an-unrelated-post", published: true).save(on: connection).wait()
         
-        let posts = try repository.findPublishedPostsOrdered(for: "vapor", on: app).wait()
+        let posts = try repository.findPublishedPostsOrdered(for: "vapor", on: app, count: 10, offset: 0).wait()
+        let count = try repository.getPublishedPostCount(for: "vapor", on: app).wait()
         
         XCTAssertEqual(posts.count, 2)
         XCTAssertEqual(posts.first?.slugUrl, post2.slugUrl)
         XCTAssertEqual(posts.last?.slugUrl, post1.slugUrl)
+        XCTAssertEqual(count, 2)
     }
     
     func testGettingAllPostsForUser() throws {
@@ -227,6 +243,25 @@ class PostRepositoryTests: XCTestCase {
         let otherUserPosts = try repository.getSortedPublishedPosts(for: otherTag, on: app, count: 10, offset: 0).wait()
         XCTAssertEqual(otherUserPosts.count, 1)
         XCTAssertEqual(otherUserPosts.first?.slugUrl, post6.slugUrl)
+    }
+    
+    func testGettingPostCountForATag() throws {
+        let tag = try BlogTag(name: "Engineering").save(on: connection).wait()
+
+        let post1 = try BlogPost(title: "A new post", contents: "Some Contents about vapor", author: postAuthor, creationDate: Date().addingTimeInterval(-360), slugUrl: "a-new-post", published: true).save(on: connection).wait()
+        let post2 = try BlogPost(title: "A different Vapor post", contents: "Some other contents", author: postAuthor, creationDate: Date().addingTimeInterval(360), slugUrl: "a-different-post", published: true).save(on: connection).wait()
+        let post3 = try BlogPost(title: "A third post", contents: "Some other contents containing vapor", author: postAuthor, creationDate: Date(), slugUrl: "a-third-post", published: true).save(on: connection).wait()
+        let post4 = try BlogPost(title: "A draft Vapor post", contents: "Some other contents", author: postAuthor, creationDate: Date().addingTimeInterval(60), slugUrl: "a-draft-post", published: true).save(on: connection).wait()
+        let post5 = try BlogPost(title: "An unrelated draft post", contents: "Some other contents", author: postAuthor, creationDate: Date().addingTimeInterval(10), slugUrl: "an-unrelated-draft-post", published: false).save(on: connection).wait()
+        _ = try post1.tags.attach(tag, on: connection).wait()
+        _ = try post2.tags.attach(tag, on: connection).wait()
+        _ = try post3.tags.attach(tag, on: connection).wait()
+        _ = try post4.tags.attach(tag, on: connection).wait()
+        _ = try post5.tags.attach(tag, on: connection).wait()
+
+        let count = try repository.getPublishedPostCount(for: tag, on: app).wait()
+
+        XCTAssertEqual(count, 4)
     }
 }
 
