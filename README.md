@@ -16,7 +16,7 @@
     </a>
 </p>
 
-Steampress Fluent Postgres provides Fluent PostgreSQL adapters for SteamPress to allow you to use SteamPress with a PostgreSQL database.
+Steampress Fluent MySQL provides Fluent MySQL adapters for SteamPress to allow you to use SteamPress with a MySQL database.
 
 # Usage:
 
@@ -25,7 +25,7 @@ Add the package to your **Package.swift** dependencies:
 ```swift
 dependencies: [
     ...,
-    .package(url: "https://github.com/brokenhandsio/steampress-fluent-mysql.git", from: "0.1.0"),
+    .package(name: "SteampressFluentMysql", url: "https://github.com/brokenhandsio/steampress-fluent-mysql.git", from: "0.1.0"),
 ]
 ```
 
