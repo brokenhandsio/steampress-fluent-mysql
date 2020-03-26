@@ -25,7 +25,7 @@ Add the package to your **Package.swift** dependencies:
 ```swift
 dependencies: [
     ...,
-    .package(name: "SteampressFluentMysql", url: "https://github.com/brokenhandsio/steampress-fluent-mysql.git", from: "0.1.0"),
+    .package(name: "SteampressFluentMysql", url: "https://github.com/brokenhandsio/steampress-fluent-mysql.git", from: "1.0.0"),
 ]
 ```
 
